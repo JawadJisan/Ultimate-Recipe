@@ -17,9 +17,8 @@
     "react-countup": "^6.5.3",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.5",
+    "react-hot-toast": "^2.4.1",
     "react-infinite-scroll-component": "^6.1.0",
-    "react-owl-carousel": "^2.3.3",
-    "react-owl-carousel2": "^0.3.0",
     "react-router-dom": "^6.23.1"
   },
   "devDependencies": {
