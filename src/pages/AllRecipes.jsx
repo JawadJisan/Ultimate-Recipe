@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import RecipeCard from "../components/RecipeCard";
 import axios from "../utils/axios";
 import Loading from "../components/Loading";
 import RecipeCard2 from "../components/RecipeCard2";
+import useDebounce from "../utils/useDebounce";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -11,7 +11,31 @@ const AllRecipes = () => {
   const [category, setCategory] = useState("");
   const [country, setCountry] = useState("");
   const [search, setSearch] = useState("");
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
+
+  const doSearch = useDebounce(async (searchTerm) => {
+    try {
+      setLoading(true);
+      setSearch(searchTerm);
+      setLoading(false);
+    } catch (error) {
+      setError(error.message || error);
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+
+    console.log(searchTerm);
+  }, 1000);
+
+  console.log(search);
+
+  const handleChange = async (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    doSearch(value);
+  };
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -22,7 +46,7 @@ const AllRecipes = () => {
             limit: 10,
             category,
             country,
-            search,
+            // search,
           },
         });
 
@@ -56,7 +80,7 @@ const AllRecipes = () => {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [hasMore, page, category, country, search]);
+  }, [hasMore, page, category, country]);
 
   return (
     <>
@@ -65,40 +89,54 @@ const AllRecipes = () => {
           <div>
             <h3 className="font-semibold text-xl">All Recipes</h3>
 
-            <div className="my-4">
-              <input
-                type="text"
-                placeholder="Search by title"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="p-2 border rounded"
-              />
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="p-2 border rounded ml-2"
-              >
-                <option value="">All Categories</option>
-                <option value="category1">Category 1</option>
-                <option value="category2">Category 2</option>
-              </select>
-              <select
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                className="p-2 border rounded ml-2"
-              >
-                <option value="">All Countries</option>
-                <option value="country1">Country 1</option>
-                <option value="country2">Country 2</option>
-              </select>
+            <div className="my-4 flex w-full items-center justify-between gap-5">
+              <div className="w-full">
+                <input
+                  type="text"
+                  placeholder="Search by title"
+                  value={query}
+                  onChange={handleChange}
+                  className="w-full bg-transparent p-2 text-base text-black outline-none  border border-red-400 rounded-lg focus:ring focus:ring-red-500"
+                />
+              </div>
+              <div className="w-full flex justify-between ">
+                <select
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  className={`w-full mr-3  p-3 bg-[#dfe2e7] border rounded-md focus:outline-none  border-white/20 focus:border-red-500 `}
+                >
+                  <option value="">Select Country</option>
+                  <option value="breakfast">Breakfast</option>
+                  <option value="lunch">Lunch</option>
+                  <option value="dinner">Dinner</option>
+                  <option value="snack">Snack</option>
+                  <option value="dessert">Dessert</option>
+                </select>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className={`w-full  p-3 bg-[#dfe2e7] border rounded-md focus:outline-none  border-white/20 focus:border-red-500 `}
+                >
+                  <option value="">Select Category</option>
+                  <option value="breakfast">Breakfast</option>
+                  <option value="lunch">Lunch</option>
+                  <option value="dinner">Dinner</option>
+                  <option value="snack">Snack</option>
+                  <option value="dessert">Dessert</option>
+                </select>
+              </div>
             </div>
 
             <div className="container">
               <div className="grid grid-cols-1  gap-4">
                 <div className="space-y-3 md:col-span-5">
-                  {recipes.map((recipe) => (
-                    <RecipeCard2 key={recipe._id} recipe={recipe} />
-                  ))}
+                  {recipes
+                    .filter((rec) =>
+                      rec.name.toLowerCase().includes(search.toLowerCase())
+                    )
+                    .map((recipe) => (
+                      <RecipeCard2 key={recipe._id} recipe={recipe} />
+                    ))}
                 </div>
               </div>
             </div>

@@ -6,13 +6,12 @@ import { toast } from "react-hot-toast";
 import axios from "../utils/axios";
 
 const RecipeCard2 = ({ recipe }) => {
+  console.log(recipe);
   const { country, creatorEmail, image, name, purchased_by } = recipe;
   const { user } = useAuth();
   const navigate = useNavigate();
-  console.log(user);
 
   const handleViewRecipe = (recipe) => {
-    console.log(recipe);
     if (!user) {
       toast.error("Please login to view the recipe");
       //   navigate("/");
