@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Success = () => {
-  const { user, setReFetchMe } = useAuth();
+  const { user, fetchUserData } = useAuth();
   const { amount } = useParams();
   const navigate = useNavigate();
   console.log(amount, "amount from success");
@@ -21,7 +21,7 @@ const Success = () => {
           });
           if (res.status == 200) {
             toast.success("Successfully Purchased Coin");
-            setReFetchMe(true);
+            fetchUserData();
             navigate("/all-recipes");
           }
         }
@@ -30,7 +30,7 @@ const Success = () => {
       }
     };
     updateCoins();
-  }, [amount, user, navigate, setReFetchMe]);
+  }, [amount, user, navigate, fetchUserData]);
 
   return (
     <div className="grid place-items-center ">

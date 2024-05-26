@@ -8,7 +8,7 @@ import axios from "../utils/axios";
 const RecipeCard2 = ({ recipe }) => {
   // console.log(recipe);
   const { country, creatorEmail, image, name, purchased_by } = recipe;
-  const { user, setReFetchMe } = useAuth();
+  const { user, fetchUserData } = useAuth();
   const navigate = useNavigate();
 
   const handleViewRecipe = (recipe) => {
@@ -33,16 +33,18 @@ const RecipeCard2 = ({ recipe }) => {
             creatorEmail: recipe.creatorEmail,
             recipeId: recipe._id,
           };
-          const purcheseRecipe = async () => {
-            const response = await axios.post("/recipes/purchase", data);
-            console.log(response);
-            setReFetchMe(true);
-            if (response.status === 200) {
-              setReFetchMe(true);
-              navigate(`/recipe/${recipe._id}`);
+          const purchaseRecipe = async () => {
+            try {
+              const response = await axios.post("/recipes/purchase", data);
+              if (response.status === 200) {
+                await fetchUserData();
+                navigate(`/recipe/${recipe._id}`);
+              }
+            } catch (error) {
+              console.error("Error purchasing recipe", error);
             }
           };
-          purcheseRecipe();
+          purchaseRecipe();
         }
       }
     }
