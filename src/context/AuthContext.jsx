@@ -18,9 +18,12 @@ export const AuthProvider = ({ children }) => {
       const idToken = await result.user.getIdToken();
       // console.log(idToken, "idToken");
 
-      const res = await axios.post("http://localhost:5000/api/users/login", {
-        idToken,
-      });
+      const res = await axios.post(
+        "https://ultimate-recipe-server-twin.vercel.app/api/users/login",
+        {
+          idToken,
+        }
+      );
       // console.log(res, "res from server");
       const token = res.data.token;
       const userInfo = res.data.user;
@@ -43,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     // console.log(token);
     if (token) {
       axios
-        .get("http://localhost:5000/api/users/me", {
+        .get("https://ultimate-recipe-server-twin.vercel.app/api/users/me", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
