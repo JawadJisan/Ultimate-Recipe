@@ -3,6 +3,7 @@ import axios from "../utils/axios";
 import Loading from "../components/Loading";
 import RecipeCard2 from "../components/RecipeCard2";
 import useDebounce from "../utils/useDebounce";
+import { countries } from "countries-list";
 
 const AllRecipes = () => {
   const [recipes, setRecipes] = useState([]);
@@ -15,13 +16,20 @@ const AllRecipes = () => {
   const [loading, setLoading] = useState(false);
   const loaderRef = useRef(null);
 
+  const countryOptions = Object.keys(countries).map((code) => ({
+    code,
+    name: countries[code].name,
+  }));
+
+  console.log(country, category);
+
   const doSearch = useDebounce(async (searchTerm) => {
     try {
       setLoading(true);
       setSearch(searchTerm);
       setLoading(false);
     } catch (error) {
-      setError(error.message || error);
+      // setError(error.message || error);
       console.error("Error fetching data:", error);
       setLoading(false);
     }
@@ -40,18 +48,17 @@ const AllRecipes = () => {
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
+        setLoading(true);
         const response = await axios.get("/recipes/all", {
           params: {
             page,
             limit: 10,
-            category,
-            country,
+            // category,
+            // country,
             // search,
           },
         });
-
         const newRecipes = response.data.recipes;
-
         if (newRecipes.length === 0) {
           setHasMore(false);
         } else {
@@ -61,6 +68,8 @@ const AllRecipes = () => {
       } catch (error) {
         console.error("Error fetching recipes:", error);
         setHasMore(false);
+      } finally {
+        setLoading(false);
       }
     };
     const observer = new IntersectionObserver(
@@ -80,7 +89,20 @@ const AllRecipes = () => {
         observer.unobserve(loaderRef.current);
       }
     };
-  }, [hasMore, page, category, country]);
+  }, [hasMore, page]);
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  const filteredRecipes = recipes.filter((rec) => {
+    const searchMatch =
+      search.toLowerCase() === "" ||
+      rec.name.toLowerCase().includes(search.toLowerCase());
+    const categoryMatch = category === "" || rec.category.includes(category);
+    const countryMatch = country === "" || rec.country.includes(country);
+    return searchMatch && categoryMatch && countryMatch;
+  });
 
   return (
     <>
@@ -101,28 +123,27 @@ const AllRecipes = () => {
               </div>
               <div className="w-full flex justify-between ">
                 <select
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
                   className={`w-full mr-3  p-3 bg-[#dfe2e7] border rounded-md focus:outline-none  border-white/20 focus:border-red-500 `}
                 >
-                  <option value="">Select Country</option>
-                  <option value="breakfast">Breakfast</option>
+                  <option value="">Select Category</option>
                   <option value="lunch">Lunch</option>
                   <option value="dinner">Dinner</option>
                   <option value="snack">Snack</option>
                   <option value="dessert">Dessert</option>
                 </select>
                 <select
-                  value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
                   className={`w-full  p-3 bg-[#dfe2e7] border rounded-md focus:outline-none  border-white/20 focus:border-red-500 `}
                 >
-                  <option value="">Select Category</option>
-                  <option value="breakfast">Breakfast</option>
-                  <option value="lunch">Lunch</option>
-                  <option value="dinner">Dinner</option>
-                  <option value="snack">Snack</option>
-                  <option value="dessert">Dessert</option>
+                  <option value="">Select Country</option>
+                  {countryOptions.map((country) => (
+                    <option key={country.code} value={country.name}>
+                      {country.name}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>
@@ -130,13 +151,10 @@ const AllRecipes = () => {
             <div className="container">
               <div className="grid grid-cols-1  gap-4">
                 <div className="space-y-3 md:col-span-5">
-                  {recipes
-                    .filter((rec) =>
-                      rec.name.toLowerCase().includes(search.toLowerCase())
-                    )
-                    .map((recipe) => (
-                      <RecipeCard2 key={recipe._id} recipe={recipe} />
-                    ))}
+                  {/* Display filtered recipes */}
+                  {filteredRecipes.map((recipe) => (
+                    <RecipeCard2 key={recipe._id} recipe={recipe} />
+                  ))}
                 </div>
               </div>
             </div>
@@ -151,22 +169,6 @@ const AllRecipes = () => {
                 No more recipes to load.
               </div>
             )}
-
-            {/* <div className="grid grid-cols-1 my-8 justify-items-center">
-              {recipes.map((recipe) => (
-                <RecipeCard key={recipe._id} recipe={recipe} />
-              ))}
-              {hasMore && (
-                <div ref={loaderRef} className="text-center">
-                  <Loading />
-                </div>
-              )}
-              {!hasMore && (
-                <div className="text-center font-bold text-xl text-green-900">
-                  No more recipes to load.
-                </div>
-              )}
-            </div> */}
           </div>
         </section>
       </main>
