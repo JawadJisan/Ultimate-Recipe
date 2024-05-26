@@ -8,7 +8,7 @@ import axios from "../utils/axios";
 const RecipeCard2 = ({ recipe }) => {
   // console.log(recipe);
   const { country, creatorEmail, image, name, purchased_by } = recipe;
-  const { user } = useAuth();
+  const { user, setReFetchMe } = useAuth();
   const navigate = useNavigate();
 
   const handleViewRecipe = (recipe) => {
@@ -37,6 +37,7 @@ const RecipeCard2 = ({ recipe }) => {
             const response = await axios.post("/recipes/purchase", data);
             console.log(response);
             if (response.status === 200) {
+              setReFetchMe(true);
               navigate(`/recipe/${recipe._id}`);
             }
           };

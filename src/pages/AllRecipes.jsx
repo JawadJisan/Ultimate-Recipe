@@ -20,9 +20,6 @@ const AllRecipes = () => {
     code,
     name: countries[code].name,
   }));
-
-  console.log(country, category);
-
   const doSearch = useDebounce(async (searchTerm) => {
     try {
       setLoading(true);
@@ -36,8 +33,6 @@ const AllRecipes = () => {
 
     console.log(searchTerm);
   }, 1000);
-
-  console.log(search);
 
   const handleChange = async (e) => {
     const value = e.target.value;

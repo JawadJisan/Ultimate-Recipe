@@ -18,11 +18,11 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/all-recipes" element={<AllRecipes />} />
-          <Route path="/recipe/:id" element={<RecipeDetails />} />
 
           <Route element={<PrivateRoute />}>
             <Route path="/add-recipe" element={<AddRecipe />} />
             <Route path="/pruchase-coins" element={<Home />} />
+            <Route path="/recipe/:id" element={<RecipeDetails />} />
           </Route>
         </Routes>
       </AuthProvider>

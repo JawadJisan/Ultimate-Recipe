@@ -1,16 +1,20 @@
-const RecipeCard = () => {
+const RecipeCard = ({ sug }) => {
   return (
     <>
       <div className="card">
-        <img
-          src="https://source.unsplash.com/-YHSwy6uqvk/300x160"
-          className="rounded-md"
-          alt=""
-        />
-        <h4 className="my-2">Chef Turkey Sloppy Joes</h4>
-        <div className="py-2 flex justify-between text-xs text-gray-500">
-          <span>⭐️ 5.0</span>
-          <span>By: John Doe</span>
+        <img src={sug.image} className="rounded-md w-full h-[250px]" alt="" />
+        <h4 className="my-2"> {sug.name.slice(0, 20)}.. </h4>
+        <div className="py-2 flex justify-between items-center gap-2 text-xs text-gray-500">
+          <span>
+            Category:{" "}
+            <span className="text-[#eb4a36] font-bold text-sm">
+              {" "}
+              {sug.category}{" "}
+            </span>{" "}
+          </span>
+          <br />
+          <br />
+          <span>By: {sug.creatorEmail}</span>
         </div>
       </div>
     </>
