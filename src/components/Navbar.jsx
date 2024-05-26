@@ -32,7 +32,7 @@ const Navbar = () => {
                 <Link to="/add-recipe">Add Recipe</Link>
               </li>
               <li className="py-2 font-bold p-2 rounded-full text-white bg-[#eb4a36]">
-                <button onClick={() => navigate("/purchase-coins")}>
+                <button onClick={() => navigate("/pruchase-coins")}>
                   {user.coin}
                 </button>
               </li>

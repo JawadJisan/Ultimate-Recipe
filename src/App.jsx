@@ -8,6 +8,8 @@ import Loading from "./components/Loading";
 import AllRecipes from "./pages/AllRecipes";
 import RecipeDetails from "./pages/RecipeDetails";
 import AddRecipe from "./pages/AddRecipe";
+import PurchaseCoins from "./pages/PurchaseCoins";
+import Success from "./components/Success";
 
 function App() {
   return (
@@ -18,10 +20,10 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/loading" element={<Loading />} />
           <Route path="/all-recipes" element={<AllRecipes />} />
-
+          <Route path="/success/:amount" element={<Success />} />
           <Route element={<PrivateRoute />}>
             <Route path="/add-recipe" element={<AddRecipe />} />
-            <Route path="/pruchase-coins" element={<Home />} />
+            <Route path="/pruchase-coins" element={<PurchaseCoins />} />
             <Route path="/recipe/:id" element={<RecipeDetails />} />
           </Route>
         </Routes>

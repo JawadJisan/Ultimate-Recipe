@@ -210,20 +210,18 @@ const RecipeDetails = () => {
 
           <section>
             <div className="container py-12">
-              <div>
-                <div className="step">
-                  <h3>Recipe You May Like</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8 justify-items-center">
-                    {suggestions?.length > 0 ? (
-                      suggestions.map((sug) => (
-                        <RecipeCard sug={sug} key={sug._id} />
-                      ))
-                    ) : (
-                      <p>
-                        No Suggest Recipe Found Using This Category and Country
-                      </p>
-                    )}
-                  </div>
+              <div className="step">
+                <h3>Recipe You May Like</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 my-8 justify-items-center">
+                  {suggestions?.length > 0 ? (
+                    suggestions.map((sug) => (
+                      <RecipeCard sug={sug} key={sug._id} />
+                    ))
+                  ) : (
+                    <p>
+                      No Suggest Recipe Found Using This Category and Country
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
