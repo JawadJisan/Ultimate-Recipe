@@ -1,6 +1,18 @@
-import Carousel from "../components/Carousel";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 const Home = () => {
+  const { user, login, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCLick = () => {
+    if (!user) {
+      login();
+      // navigate("/add-recipe");
+    } else {
+      navigate("/add-recipe");
+    }
+  };
+
   return (
     <>
       <main>
@@ -14,6 +26,19 @@ const Home = () => {
                 Appropriately integrate technically sound value with scalable
                 infomediaries negotiate sustainable strategic theme areas
               </p>
+              <div className="mt-10">
+                <Link to="/all-recipes">
+                  <button className="py-2 bg-[#d55f1b] hover:bg-[#cf4c00] mx-4 px-6 rounded-md text-white content-center">
+                    See Recipes
+                  </button>
+                </Link>
+                <button
+                  onClick={handleCLick}
+                  className="py-2 bg-[#eb4a36] hover:bg-[#cf4c00] px-6 rounded-md text-white content-center"
+                >
+                  Add Recipes
+                </button>
+              </div>
             </div>
           </div>
         </section>
