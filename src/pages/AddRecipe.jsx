@@ -70,7 +70,7 @@ const AddRecipe = () => {
     <>
       <main>
         <section className="container">
-          <div className="w-full md:w-1/2 mx-auto bg-[#f1f1f5] p-8 rounded-md mt-12">
+          <div className="w-full md:w-1/2 mx-auto bg-[#faf8f8] p-8 rounded-md mt-12">
             <h2 className="text-2xl font-bold mb-6">Add Recipe</h2>
             <form onSubmit={handleSubmit(submitForm)} autoComplete="off">
               <div className="mb-6">

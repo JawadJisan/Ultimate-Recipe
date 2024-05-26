@@ -36,6 +36,7 @@ const RecipeCard2 = ({ recipe }) => {
           const purcheseRecipe = async () => {
             const response = await axios.post("/recipes/purchase", data);
             console.log(response);
+            setReFetchMe(true);
             if (response.status === 200) {
               setReFetchMe(true);
               navigate(`/recipe/${recipe._id}`);

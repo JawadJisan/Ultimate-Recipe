@@ -39,8 +39,8 @@ const Navbar = () => {
               <li className="py-2">
                 <img
                   className="rounded-full w-10 h-10"
-                  src={user.photoURL}
-                  alt=""
+                  src={user?.photoURL}
+                  alt={user?.email}
                 />
               </li>
               <li className="py-2 bg-[#eb4a36] px-6 rounded-md text-white content-center">
