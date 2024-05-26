@@ -3,14 +3,22 @@ import axios from "../utils/axios";
 import { useEffect, useState } from "react";
 import Loading from "../components/Loading";
 import RecipeCard from "../components/RecipeCard";
+import { useAuth } from "../context/AuthContext";
+import { toast } from "react-hot-toast";
 
 const RecipeDetails = () => {
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState();
   const [suggestions, setSuggestions] = useState([]);
+  const [hasReacted, setHasReacted] = useState(false);
 
-  console.log(suggestions);
+  const { user } = useAuth();
+
+  console.log(recipe);
+
+  // const isFavourite =
+  console.log(hasReacted);
 
   useEffect(() => {
     const fetRecipeDetails = async () => {
@@ -20,7 +28,7 @@ const RecipeDetails = () => {
         // console.log(response);
         if (response.status === 200) {
           setRecipe(response.data.recipe);
-
+          setHasReacted(response.data.recipe.reactions.includes(user?._id));
           const suggestionRes = await axios.get(`/recipes/suggestions`, {
             params: {
               category: response.data.recipe.category,
@@ -36,7 +44,34 @@ const RecipeDetails = () => {
       }
     };
     fetRecipeDetails();
-  }, [id]);
+  }, [id, user?._id]);
+
+  const handleReaction = async () => {
+    try {
+      const url = hasReacted
+        ? "/recipes/removeReaction"
+        : "/recipes/addReaction";
+      const response = await axios.post(url, {
+        recipeId: id,
+        userId: user?._id,
+      });
+      console.log(response);
+      if (response.status === 200) {
+        setHasReacted(!hasReacted);
+        setRecipe((prev) => ({
+          ...prev,
+          reactions: response.data.reactions,
+        }));
+        if (hasReacted) {
+          toast.error("Removed from Favourite");
+        } else {
+          toast.success("Addd to Favourite");
+        }
+      }
+    } catch (error) {
+      console.error("Error updating reaction:", error);
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -148,7 +183,12 @@ const RecipeDetails = () => {
                 </div>
 
                 <div className="flex gap-4 justify-end">
-                  <div className="flex gap-2 text-gray-600 cursor-pointer hover:text-[#eb4a36]">
+                  <div
+                    className={`flex gap-2 text-gray-600 cursor-pointer hover:text-[#eb4a36] ${
+                      hasReacted ? "text-[#eb4a36]" : ""
+                    }`}
+                    onClick={handleReaction}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -159,7 +199,9 @@ const RecipeDetails = () => {
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      className="icon icon-tabler icons-tabler-outline icon-tabler-heart"
+                      className={`icon icon-tabler icons-tabler-outline icon-tabler-heart ${
+                        hasReacted ? "fill-[#eb4a36] stroke-[#eb4a36]" : "" // Combined fill and stroke
+                      }`}
                     >
                       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                       <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
@@ -167,7 +209,7 @@ const RecipeDetails = () => {
                     <span>Favourite</span>
                   </div>
 
-                  <div className="flex gap-2 text-gray-600 cursor-pointer hover:text-[#0E79F6]">
+                  {/* <div className="flex gap-2 text-gray-600 cursor-pointer hover:text-[#0E79F6]">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -187,7 +229,7 @@ const RecipeDetails = () => {
                       <path d="M8.7 13.3l6.6 3.4" />
                     </svg>
                     <span>Share</span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

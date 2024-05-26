@@ -119,13 +119,22 @@ const AddRecipe = () => {
               <div className="mb-6">
                 <label htmlFor="videoUrl" className="block mb-2">
                   Embedded YouTube Video Code
+                  <br />
+                  (Only Video ID)
                 </label>
                 <input
-                  {...register("videoUrl")}
+                  {...register("videoUrl", {
+                    required: "Give Valid Youtube Video ID",
+                  })}
                   type="text"
                   id="videoUrl"
                   name="videoUrl"
-                  className="w-full p-3 bg-[#9c9ca1] border rounded-md focus:outline-none border-white/20 focus:border-indigo-500"
+                  // placeholder=""
+                  className={`w-full p-3 bg-[#9c9ca1] border rounded-md focus:outline-none ${
+                    errors.videoUrl
+                      ? "border-red-500 focus:border-red-500"
+                      : "border-white/20 focus:border-indigo-500"
+                  }`}
                 />
               </div>
               <div className="mb-6">
