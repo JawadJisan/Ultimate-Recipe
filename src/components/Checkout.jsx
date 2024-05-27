@@ -30,7 +30,8 @@ export const CheckoutForm = ({ amount, onSuccess, userId }) => {
       elements,
       clientSecret,
       confirmParams: {
-        return_url: `http://localhost:5173/success/${amount}`,
+        // return_url: `http://localhost:5173/success/${amount}`,
+        return_url: `https://ultimate-recipe.vercel.app/success/${amount}`,
       },
     });
     if (error) {
